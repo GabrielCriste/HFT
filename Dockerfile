@@ -27,9 +27,9 @@ RUN chown -R $NB_UID:$NB_GID $HOME
 ADD . /opt/install
 RUN fix-permissions /opt/install
 
-USER $NB_USER
-ADD . /opt/install
-RUN fix-permissions /opt/install
+RUN chown -R $NB_UID:$NB_GID /opt/install && \
+    chmod -R u+rwx /opt/install
+    
+RUN conda env update --file /opt/install/environment.yml
 
-RUN conda env update --file environment.yml --no-update-deps
    
