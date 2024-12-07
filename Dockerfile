@@ -32,11 +32,15 @@ ADD . /opt/install
 # Ajusta permissões de arquivos copiados
 RUN fix-permissions /opt/install
 
+# Evitar conflito com o diretório de instalação do Conda
+RUN rm -rf /opt/conda
+
 # Cria o ambiente Conda baseado no arquivo environment.yml
 USER $NB_USER
-RUN conda env create --file /opt/install/environment.yml
+RUN conda env create -f /opt/install/environment.yml
 
-# Altera para o diretório onde o ambiente foi criado e ativa o ambiente Conda
+# Alternativa para ativar o ambiente Conda
 RUN source /opt/conda/etc/profile.d/conda.sh && conda activate base && conda env update --file /opt/install/environment.yml
+
 
    
