@@ -44,9 +44,10 @@ ADD . /opt/install
 # Ajusta permissões de arquivos copiados
 RUN fix-permissions /opt/install
 
-# Cria o ambiente Conda baseado no arquivo environment.yml
+# Cria o ambiente Conda baseado no arquivo environment.yml em um diretório específico
 USER $NB_USER
-RUN conda env create -f /opt/install/environment.yml
+RUN conda env create -f /opt/install/environment.yml --prefix /opt/conda/envs/myenv
 
-# Alternativa para ativar o ambiente Conda
-RUN source /opt/conda/etc/profile.d/conda.sh && conda activate base && conda env update --file /opt/install/environment.yml
+# Alternativa: Ativa o ambiente Conda diretamente (não é necessário no Dockerfile, mas pode ser feito na execução)
+CMD ["bash"]
+
