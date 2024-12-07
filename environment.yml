@@ -5,6 +5,4 @@ dependencies:
   - pip
   - websockify
   - pip:
-  conda env create --dry-run --file environment.yml
-
       - .
