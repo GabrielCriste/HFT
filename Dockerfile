@@ -13,7 +13,19 @@ RUN apt-get -y update \
    xfce4-session \
    xfce4-settings \
    xorg \
-   xubuntu-icon-theme
+   xubuntu-icon-theme \
+   wget \
+   bzip2 \
+   ca-certificates \
+   curl
+
+# Instala o Conda manualmente
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
+    bash miniconda.sh -b -f -p /opt/conda && \
+    rm miniconda.sh
+
+# Adiciona Conda ao PATH
+ENV PATH /opt/conda/bin:$PATH
 
 # Remove light-locker para evitar bloqueio de tela
 ARG TURBOVNC_VERSION=2.2.6
@@ -32,15 +44,9 @@ ADD . /opt/install
 # Ajusta permissões de arquivos copiados
 RUN fix-permissions /opt/install
 
-# Evitar conflito com o diretório de instalação do Conda
-RUN rm -rf /opt/conda
-
 # Cria o ambiente Conda baseado no arquivo environment.yml
 USER $NB_USER
 RUN conda env create -f /opt/install/environment.yml
 
 # Alternativa para ativar o ambiente Conda
 RUN source /opt/conda/etc/profile.d/conda.sh && conda activate base && conda env update --file /opt/install/environment.yml
-
-
-   
