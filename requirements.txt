@@ -3,3 +3,5 @@ pandas
 matplotlib
 scipy
 jupyterlab
+jupyter-server-proxy>=1.4
+websockify
