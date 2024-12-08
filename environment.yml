@@ -1,7 +1,10 @@
-numpy
-pandas
-matplotlib
-scipy
-jupyterlab
-jupyter-server-proxy>=1.4
-websockify
+channels:
+  - conda-forge
+dependencies:
+  - jupyter-server-proxy>=1.4
+  - websockify
+  - pip
+  - pip:
+      - websockify
+      - jupyter-server-proxy
+      
