@@ -25,7 +25,15 @@ RUN wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}
     rm -f turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
     ln -s /opt/TurboVNC/bin/* /usr/local/bin/
 
-# Corrigir permissões em diretórios afetados
+# Instalar dependências Conda e Pip
+RUN conda install -y -c conda-forge \
+    jupyter-server-proxy>=1.4 \
+    websockify && \
+    pip install \
+    websockify \
+    jupyter-server-proxy
+
+# Corrigir permissões
 RUN chown -R $NB_UID:$NB_GID $HOME
 
 # Adicionar os arquivos do projeto ao contêiner
@@ -34,6 +42,3 @@ RUN fix-permissions /opt/install
 
 # Mudar de volta para o usuário padrão do Jupyter
 USER $NB_USER
-
-# Atualizar ou criar o ambiente Conda
-RUN cd /opt/install && conda env update -n base --file environment.yml
