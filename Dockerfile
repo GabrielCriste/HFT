@@ -1,4 +1,3 @@
-# Base image
 FROM jupyter/base-notebook:python-3.7.6
 
 # Trocar para o usuário root para instalar pacotes do sistema
@@ -25,20 +24,19 @@ RUN wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}
     rm -f turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
     ln -s /opt/TurboVNC/bin/* /usr/local/bin/
 
-# Instalar dependências Conda e Pip
-RUN conda install -y -c conda-forge \
-    jupyter-server-proxy>=1.4 \
-    websockify && \
-    pip install \
-    websockify \
-    jupyter-server-proxy
-
 # Corrigir permissões
 RUN chown -R $NB_UID:$NB_GID $HOME
+
+# Adicionar o arquivo environment.yml ao contêiner
+ADD environment.yml /tmp/environment.yml
+
+# Atualizar o ambiente Conda com o arquivo environment.yml
+RUN conda env update -n base --file /tmp/environment.yml && \
+    conda clean -afy
 
 # Adicionar os arquivos do projeto ao contêiner
 ADD . /opt/install
 RUN fix-permissions /opt/install
 
-# Mudar de volta para o usuário padrão do Jupyter
+# Trocar para o usuário padrão do Jupyter
 USER $NB_USER
